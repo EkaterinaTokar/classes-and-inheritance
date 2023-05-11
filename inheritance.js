@@ -1,6 +1,15 @@
-function BaseClass(val = "") {
+function BaseClass(val) {
   this.val = val;
 }
+
+BaseClass.prototype.plus = function () {};
+BaseClass.prototype.minus = function () {};
+BaseClass.prototype.multiply = function () {};
+BaseClass.prototype.divide = function () {};
+BaseClass.prototype.get = function () {
+  return this.val;
+};
+
 //ES6 class IntBuilder:
 class IntBuilder extends BaseClass {
   constructor(val = 0) {
@@ -29,9 +38,6 @@ class IntBuilder extends BaseClass {
     this.val = this.val % n;
     return this;
   }
-  get() {
-    return this.val;
-  }
 }
 
 let intBuilder = new IntBuilder(10);
@@ -47,15 +53,16 @@ console.log(
 console.log(IntBuilder.random(10, 100)); //42
 
 //ES5 class StringBuilder:
-function StringBuilder(val) {
+function StringBuilder(val = "") {
   BaseClass.call(this, val);
 }
 
 StringBuilder.prototype = Object.create(BaseClass.prototype);
 StringBuilder.prototype.constructor = StringBuilder;
 
-StringBuilder.prototype.plus = function (...string) {
-  this.val = this.val + string.join("");
+StringBuilder.prototype.plus = function () {
+  let args = arguments;
+  this.val = this.val + Array.prototype.join.call(args, "");
   return this;
 };
 StringBuilder.prototype.minus = function (n) {
@@ -81,9 +88,6 @@ StringBuilder.prototype.remove = function (str) {
 StringBuilder.prototype.sub = function (from, n) {
   this.val = this.val.substr(from, n);
   return this;
-};
-StringBuilder.prototype.get = function () {
-  return this.val;
 };
 
 let strBuilder = new StringBuilder("Hello"); // 'Hello';
