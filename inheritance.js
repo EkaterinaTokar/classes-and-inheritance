@@ -2,7 +2,12 @@ function BaseClass(val) {
   this.val = val;
 }
 
-BaseClass.prototype.plus = function () {};
+BaseClass.prototype.plus = function () {
+  let args = arguments;
+  this.val =
+    this.val + Array.prototype.reduce.call(args, (sum, elem) => sum + elem);
+  return this;
+};
 BaseClass.prototype.minus = function () {};
 BaseClass.prototype.multiply = function () {};
 BaseClass.prototype.divide = function () {};
@@ -15,13 +20,11 @@ class IntBuilder extends BaseClass {
   constructor(val = 0) {
     super(val);
   }
+
   static random(max, min) {
     return Math.floor(Math.random() * (max - min) + min);
   }
-  plus(...n) {
-    this.val = this.val + n.reduce((sum, elem) => sum + elem, 0);
-    return this;
-  }
+
   minus(...n) {
     this.val = this.val - n.reduce((sum, elem) => sum + elem, 0);
     return this;
@@ -60,11 +63,6 @@ function StringBuilder(val = "") {
 StringBuilder.prototype = Object.create(BaseClass.prototype);
 StringBuilder.prototype.constructor = StringBuilder;
 
-StringBuilder.prototype.plus = function () {
-  let args = arguments;
-  this.val = this.val + Array.prototype.join.call(args, "");
-  return this;
-};
 StringBuilder.prototype.minus = function (n) {
   this.val = this.val.slice(0, -n);
   return this;
